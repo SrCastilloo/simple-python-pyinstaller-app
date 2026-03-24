@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-alpine'
+        }
+    }
 
     options {
         skipStagesAfterUnstable()
@@ -14,7 +18,9 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+                sh 'pip install pytest'
+                sh 'mkdir -p test-reports'
+                sh 'pytest --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
             post {
                 always {
@@ -25,6 +31,7 @@ pipeline {
 
         stage('Deliver') {
             steps {
+                sh 'pip install pyinstaller'
                 sh 'pyinstaller --onefile sources/add2vals.py'
             }
             post {
