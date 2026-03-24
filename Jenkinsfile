@@ -33,7 +33,7 @@ pipeline {
 
         stage('Deliver') {
             steps {
-                sh '. venv/bin/activate && pip install pyinstaller'
+                sh '. venv/bin/activate && pip install pyinstaller==6.11.1'
                 sh '. venv/bin/activate && pyinstaller --onefile sources/add2vals.py'
             }
             post {
